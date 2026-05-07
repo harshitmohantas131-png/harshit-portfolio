@@ -1,111 +1,225 @@
+/* Fonts are loaded via <link> in index.html for correct PostCSS ordering */
+@import "tailwindcss";
+
+/* ────────────────────────────────────────────
+   Design Tokens (CSS Custom Properties)
+──────────────────────────────────────────── */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* Colour Palette */
+  --clr-cream:        #FFFAF4;
+  --clr-cream-soft:   #FFF5E9;
+  --clr-saffron:      #F97316;   /* orange-500  */
+  --clr-saffron-lt:   #FB923C;   /* orange-400  */
+  --clr-peach:        #FBBF24;   /* amber-400   */
+  --clr-peach-lt:     #FDE68A;   /* amber-200   */
+  --clr-rose:         #FB7185;   /* rose-400    */
+  --clr-warm-gray:    #78716C;   /* stone-500   */
+  --clr-text:         #1C1917;   /* stone-900   */
+  --clr-text-muted:   #57534E;   /* stone-600   */
+  --clr-border:       #E7E5E4;   /* stone-200   */
+  --clr-white:        #FFFFFF;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* Gradient presets */
+  --grad-hero:   linear-gradient(135deg, #FFFAF4 0%, #FFF8F0 50%, #FFF0D4 100%);
+  --grad-accent: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
+  --grad-text:   linear-gradient(135deg, #292524 0%, #44403C 100%);
+  --grad-glass:  linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.3) 100%);
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Shadows */
+  --shadow-sm:  0 2px 8px rgba(249, 115, 22, 0.08);
+  --shadow-md:  0 8px 32px rgba(249, 115, 22, 0.12);
+  --shadow-lg:  0 20px 60px rgba(249, 115, 22, 0.16);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  /* Typography */
+  --font-body:    'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+
+  /* Spacing scale (8-pt grid) */
+  --sp-1: 0.5rem;
+  --sp-2: 1rem;
+  --sp-3: 1.5rem;
+  --sp-4: 2rem;
+  --sp-6: 3rem;
+  --sp-8: 4rem;
+  --sp-12: 6rem;
+  --sp-16: 8rem;
+
+  /* Radius */
+  --r-sm:  0.5rem;
+  --r-md:  1rem;
+  --r-lg:  1.5rem;
+  --r-xl:  2rem;
+  --r-full: 9999px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* ────────────────────────────────────────────
+   Base Reset & Globals
+──────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  margin: 0;
+  font-family: var(--font-body);
+  background-color: var(--clr-cream);
+  color: var(--clr-text);
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  width: 100%;
   min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+/* ────────────────────────────────────────────
+   Typography Helpers
+──────────────────────────────────────────── */
+.font-display { font-family: var(--font-display); }
+
+.gradient-text {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+/* ────────────────────────────────────────────
+   Glassmorphism Card
+──────────────────────────────────────────── */
+.glass {
+  background: var(--grad-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow: var(--shadow-card);
 }
 
-code,
-.counter {
-  font-family: var(--mono);
+/* ────────────────────────────────────────────
+   Button Base Styles
+──────────────────────────────────────────── */
+.btn-primary {
   display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  background: var(--clr-text);
+  color: var(--clr-white);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--clr-text);
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(28, 25, 23, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+  text-decoration: none;
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  background: var(--clr-white);
+  color: var(--clr-text);
+  box-shadow: 0 6px 20px rgba(28, 25, 23, 0.1);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--clr-text);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-radius: var(--r-full);
+  border: 1px solid rgba(28, 25, 23, 0.15);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+}
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(28, 25, 23, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(28, 25, 23, 0.05);
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+/* ────────────────────────────────────────────
+   Section Spacing
+──────────────────────────────────────────── */
+.section {
+  padding: var(--sp-16) var(--sp-4);
+}
+@media (max-width: 768px) {
+  .section { padding: var(--sp-12) var(--sp-2); }
+}
+
+/* ────────────────────────────────────────────
+   Keyframe Animations
+──────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-12px) rotate(1deg); }
+  66%       { transform: translateY(-5px) rotate(-0.5deg); }
+}
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50%       { transform: translateY(-12px) scale(1.02); }
+}
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(1.04); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50%       { transform: translateY(8px); opacity: 0.5; }
+}
+
+.animate-float     { animation: float 6s ease-in-out infinite; }
+.animate-float-slow{ animation: floatSlow 8s ease-in-out infinite; }
+.animate-pulse-glow{ animation: pulseGlow 3s ease-in-out infinite; }
+.animate-scroll    { animation: scrollBounce 1.8s ease-in-out infinite; }
+
+/* ────────────────────────────────────────────
+   Scrollbar Styling
+──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--clr-cream); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--clr-saffron-lt), var(--clr-peach));
+  border-radius: var(--r-full);
+}
+
+/* ────────────────────────────────────────────
+   Tailwind v4 — extend the theme inline
+──────────────────────────────────────────── */
+@theme {
+  --color-cream:       #FFFAF4;
+  --color-saffron:     #F97316;
+  --color-saffron-lt:  #FB923C;
+  --color-peach:       #FBBF24;
+  --color-peach-lt:    #FDE68A;
+  --color-warm-gray:   #78716C;
+
+  --font-body:    'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+
+  --breakpoint-xs: 480px;
 }
