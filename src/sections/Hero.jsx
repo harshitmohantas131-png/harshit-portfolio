@@ -83,8 +83,8 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex flex-col pt-32 md:pt-40 lg:pt-48 pb-10 overflow-hidden"
-      style={{ background: 'var(--grad-hero)' }}
+      className="relative min-h-screen flex flex-col pb-10 overflow-hidden"
+      style={{ background: 'var(--grad-hero)', paddingTop: 'clamp(100px, 10vw, 130px)' }}
     >
       {/* ── Background Decorative Blobs ── */}
       <Blob
@@ -111,7 +111,7 @@ export default function Hero() {
       />
 
       {/* ── Main Content ── */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 mt-40 md:mt-52 lg:mt-60 w-full">
+      <div className="relative z-10 max-w-5xl mx-auto px-6 w-full">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
 
           {/* LEFT — Text Content */}
@@ -215,7 +215,11 @@ export default function Hero() {
                   boxShadow: '0 8px 32px rgba(0,0,0,0.04)',
                 }}
               >
-                <span className="text-6xl select-none">👨‍💻</span>
+                <img 
+                  src="/projects/profile.jpeg" 
+                  alt="Harshit Mohanta" 
+                  className="w-full h-full object-cover rounded-full p-1"
+                />
               </div>
 
               <div className="text-center px-8">

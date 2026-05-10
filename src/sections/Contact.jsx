@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Mail, MapPin, Send } from 'lucide-react';
+import { Mail, MapPin, Send, Phone } from 'lucide-react';
 import { GitHubIcon, LinkedInIcon, LeetCodeIcon } from '../components/Icons';
 
 const socials = [
@@ -65,8 +65,45 @@ function Textarea({ placeholder, name, value, onChange }) {
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [status, setStatus] = useState({ type: '', message: '' });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.name || !form.email || !form.message) {
+      setStatus({ type: 'error', message: 'Please fill out all fields.' });
+      return;
+    }
+
+    setIsLoading(true);
+    setStatus({ type: '', message: '' });
+
+    try {
+      const response = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus({ type: 'success', message: 'Message sent successfully!' });
+        setForm({ name: '', email: '', message: '' }); // reset form
+      } else {
+        setStatus({ type: 'error', message: data.error || 'Failed to send message.' });
+      }
+    } catch (error) {
+      console.error('Submit Error:', error);
+      setStatus({ type: 'error', message: 'Network error. Is the server running?' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <section id="contact" className="section relative overflow-hidden" style={{ background: 'var(--clr-cream)' }}>
@@ -133,6 +170,26 @@ export default function Contact() {
               </div>
             </a>
 
+            {/* Phone Card */}
+            <a
+              href="tel:+919348837256"
+              className="flex items-center gap-4 p-5 rounded-2xl group transition-all duration-300 hover:-translate-y-1"
+              style={{
+                background: 'rgba(255,255,255,0.75)',
+                border: '1.5px solid rgba(28,25,23,0.05)',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.02)',
+              }}
+            >
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors"
+                   style={{ background: 'rgba(249,115,22,0.08)', color: 'var(--clr-saffron)' }}>
+                <Phone size={20} />
+              </div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest mb-0.5" style={{ color: 'var(--clr-warm-gray)' }}>Phone</p>
+                <p className="text-base font-semibold" style={{ color: 'var(--clr-text)' }}>+91 93488 37256</p>
+              </div>
+            </a>
+
             {/* Location */}
             <div className="flex items-center gap-4 p-5 rounded-2xl"
                  style={{
@@ -196,7 +253,7 @@ export default function Contact() {
                 Send a message
               </h3>
 
-              <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
+              <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div className="flex flex-col gap-2">
                     <label className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--clr-warm-gray)' }}>Your Name</label>
@@ -213,19 +270,29 @@ export default function Contact() {
                   <Textarea name="message" placeholder="I'd love to collaborate on..." value={form.message} onChange={handleChange} />
                 </div>
 
+                {status.message && (
+                  <div className={`p-3 rounded-xl text-sm font-medium ${
+                    status.type === 'error' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-green-50 text-green-600 border border-green-100'
+                  }`}>
+                    {status.message}
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="self-start flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-sm transition-all duration-300 hover:-translate-y-0.5"
+                  disabled={isLoading}
+                  className="self-start flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-sm transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
                   style={{
                     background: 'var(--clr-text)',
                     color: 'var(--clr-white)',
                     boxShadow: '0 6px 24px rgba(28,25,23,0.15)',
+                    cursor: isLoading ? 'wait' : 'pointer'
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 10px 32px rgba(28,25,23,0.25)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 6px 24px rgba(28,25,23,0.15)'; }}
+                  onMouseEnter={(e) => { if(!isLoading) e.currentTarget.style.boxShadow = '0 10px 32px rgba(28,25,23,0.25)'; }}
+                  onMouseLeave={(e) => { if(!isLoading) e.currentTarget.style.boxShadow = '0 6px 24px rgba(28,25,23,0.15)'; }}
                 >
-                  <Send size={16} />
-                  Send Message
+                  <Send size={16} className={isLoading ? "animate-pulse" : ""} />
+                  {isLoading ? 'Sending...' : 'Send Message'}
                 </button>
               </form>
             </div>
