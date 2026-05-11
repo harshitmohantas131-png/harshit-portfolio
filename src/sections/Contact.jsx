@@ -82,7 +82,7 @@ export default function Contact() {
 
     try {
       // REPLACE THIS URL with your Render URL after deploying the server
-      const RENDER_URL = 'https://YOUR-APP-NAME.onrender.com/api/contact';
+      const RENDER_URL = "https://harshit-portfolio-backend.onrender.com";
       const response = await fetch(RENDER_URL, {
         method: 'POST',
         headers: {
