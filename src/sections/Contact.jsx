@@ -81,7 +81,9 @@ export default function Contact() {
     setStatus({ type: '', message: '' });
 
     try {
-      const response = await fetch('/api/contact', {
+      // REPLACE THIS URL with your Render URL after deploying the server
+      const RENDER_URL = 'https://YOUR-APP-NAME.onrender.com/api/contact';
+      const response = await fetch(RENDER_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
